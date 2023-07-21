@@ -1,0 +1,44 @@
+{
+  "name": "talk-talk-chatapp",
+  "version": "1.0.0",
+  "description": "Application Chat",
+  "main": "./src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "npx electronmon .",
+    "watch": "webpack --config ./webpack/webpack.common.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Guilherme-G-Cadilhe/Talk-Talk-ChatApp.git"
+  },
+  "keywords": [
+    "electron",
+    "javascript",
+    "react",
+    "webpack"
+  ],
+  "author": "Guilherme G Cadilhe ( Bobnini )",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Guilherme-G-Cadilhe/Talk-Talk-ChatApp/issues"
+  },
+  "homepage": "https://github.com/Guilherme-G-Cadilhe/Talk-Talk-ChatApp#readme",
+  "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "electron": "^25.3.1"
+  },
+  "dependencies": {
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-react": "^7.22.5",
+    "babel-loader": "^9.1.3",
+    "css-loader": "^6.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sass": "^1.64.0",
+    "sass-loader": "^13.3.2",
+    "style-loader": "^3.3.3",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}
