@@ -21,7 +21,7 @@ function createMainWindow() {
       preload: path.join(__dirname, 'preload.js'),
     }
   });
-  // Open DevTools if in DEV Env
+
   if (isDev) {
     mainWindow.webContents.openDevTools()
   }
@@ -31,9 +31,7 @@ function createMainWindow() {
 app.whenReady().then(() => {
   createMainWindow();
 
-  // Remove MainWindow from memory on close
   mainWindow.on('closed', () => mainWindow = null)
-  // If window didnt load properly
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createMainWindow()
@@ -41,7 +39,6 @@ app.whenReady().then(() => {
   })
 });
 
-// If operating System isnt MAC, ensure the app closes.
 app.on('window-all-closed', () => {
   if (!isMac) {
     app.quit()
