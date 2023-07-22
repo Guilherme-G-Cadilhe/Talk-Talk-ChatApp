@@ -2,10 +2,11 @@
  * To run locally in continous development( nodemon ) use:
  * - "npx electronmon ."
  */
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, Notification } = require('electron');
 const path = require('path');
 
-const isDev = process.env.NODE_ENV !== 'production';
+// const isDev = process.env.NODE_ENV !== 'production';
+const isDev = !app.isPackaged
 const isMac = process.platform === 'darwin'
 let mainWindow = null;
 
@@ -38,6 +39,10 @@ app.whenReady().then(() => {
     }
   })
 });
+
+ipcMain.on('notify', (_, message) => {
+  new Notification({ title: 'Notification', body: message }).show();
+})
 
 app.on('window-all-closed', () => {
   if (!isMac) {
