@@ -5,8 +5,8 @@
   "main": "./src/main/main.js",
   "scripts": {
     "start": "electron .",
-    "dev": "npx electronmon .",
-    "watch": "webpack --config ./webpack/webpack.common.js --watch"
+    "watch": "webpack --config ./webpack/webpack.common.js --watch",
+    "dev": "npx electronmon ."
   },
   "repository": {
     "type": "git",

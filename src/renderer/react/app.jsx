@@ -3,8 +3,8 @@ import React from 'react'
 const App = () => {
 
   const title = "Hello World";
-  const enchancedTitle = title + '- React App!'
-
+  const enchancedTitle = title + '- React'
+  debugger
   return (
     <h1>{enchancedTitle}</h1>
   )

@@ -2,10 +2,10 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './src/renderer/index.js', // Arquivo JS Web Principal ( Base Root )
-  devtool: 'inline-source-map',
-  target: 'electron-renderer',
-  module: {
+  entry: './src/renderer/index.jsx', // Arquivo JS Web Principal ( Base inicial Root )
+  devtool: 'inline-source-map', // Mapea a ligação entre o arquivo compilado e o normal para ajudar no DevTools
+  target: 'electron-renderer', // Definição do sistema alvo
+  module: { // Modulos de configuração do seu ambiente
     rules: [
       {
         test: /\.(js|jsx)$/,
@@ -26,11 +26,11 @@ module.exports = {
       {
         test: [/\.s[ac]ss$/i, /\.css$/i],
         use: [
-          // Creates `style` nodes from JS strings
+          // Cria `style` nodes apartir de strings de JS
           'style-loader',
-          // Translates CSS into CommonJS
+          // Traduz CSS em CommonJS
           'css-loader',
-          // Compiles Sass to CSS
+          // Compila Sass para CSS
           'sass-loader',
         ],
       }
@@ -40,8 +40,8 @@ module.exports = {
   resolve: { // Adiciona os tipos de extensões JS utilizadas
     extensions: ['.js', '.jsx'],
   },
-  output: {
+  output: { // Onde será criado o arquivo js do resultado compilado
     filename: 'app.js',
-    path: path.resolve(__dirname, '..', 'build', 'js'),
+    path: path.resolve(__dirname, '..', 'build', 'js'), // {repo}/build/js/app.js
   },
 };
