@@ -1,0 +1,18 @@
+npm install firebase@8
+
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+ 
+const config = {
+  apiKey: "...",
+  authDomain: "...",
+  databaseURL: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "...",
+  measurementId: "..."
+};
+ 
+export const { Timestamp } = firebase.firestore;
+export default firebase.initializeApp(config).firestore();

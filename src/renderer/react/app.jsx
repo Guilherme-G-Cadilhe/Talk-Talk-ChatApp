@@ -1,23 +1,23 @@
 import React from 'react'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { Home, LoginView, RegisterView, SettingsView } from './views/export.views';
+import { Navbar } from './components/export.components';
 
 const App = () => {
 
-  const title = "Hello World";
-  const enchancedTitle = title + '- React'
-
-  const sendNotification = () => {
-    alert('Hello World')
-  }
-  const sendNotificationNative = () => {
-    e_notification.send("Teste")
-  }
 
   return (
-    <>
-      <h1>{enchancedTitle}</h1>
-      <button onClick={sendNotification}>Send Web Alert Notification</button>
-      <button onClick={sendNotificationNative}>Send Native Alert Notification</button>
-    </>
+    <Router>
+      <Navbar />
+      <div className='content-wrapper'>
+        <Routes>
+          <Route path="/settings" element={<SettingsView />} />
+          <Route path="/login" element={<LoginView />} />
+          <Route path="/register" element={<RegisterView />} />
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </div>
+    </Router>
   )
 }
 
