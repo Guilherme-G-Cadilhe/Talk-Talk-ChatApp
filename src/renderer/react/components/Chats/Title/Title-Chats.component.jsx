@@ -1,13 +1,14 @@
 import React from "react";
-
-const TitleChat = () => {
+import { Link } from "react-router-dom";
+const TitleChat = ({ title = '', children }) => {
 
   return (
     <div className="chat-name-container">
-      <span className="name">Choose your channel</span>
-      <a
-        href="/"
-        className="btn btn-primary btn-sm back-button">Back</a>
+      <span className="name">{title}</span>
+      <div style={{ display: 'flex', textAlign: 'center', alignItems: 'center' }}>{children}</div>
+      {/* <Link
+        to="/"
+        className="btn btn-primary btn-sm back-button">Back</Link> */}
     </div>
   )
 }

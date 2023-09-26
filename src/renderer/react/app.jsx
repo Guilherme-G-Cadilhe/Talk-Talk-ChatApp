@@ -1,20 +1,79 @@
-import React from 'react'
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import { Home, LoginView, RegisterView, SettingsView } from './views/export.views';
-import { Navbar } from './components/export.components';
+import React, { useEffect } from 'react'
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+  useLocation,
+  Navigate
+} from 'react-router-dom';
+import { Home, WelcomeView, SettingsView, ChatView, ChatCreate } from './views/export.views';
+import { LoadingView, Navbar } from './components/export.components';
+import { useAuthStore } from '../js/store';
+import { onlineNotificatorMiddleware, useOnlineStatusStore } from '../js/store/app';
+
+const VerifyUser = () => {
+  const location = useLocation();
+  const user = useAuthStore((state) => state.user)
+  return user ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/" state={{ from: location }} replace />
+  );
+};
 
 const App = () => {
+  const authListener = useAuthStore((state) => state.AuthStateListener);
+  const isChecking = useAuthStore((state) => state.isChecking)
+  const addWindowEventListener = useOnlineStatusStore((state) => state.addWindowEventListener)
+  const removeWindowEventListener = useOnlineStatusStore((state) => state.removeWindowEventListener)
+  const isOnline = useOnlineStatusStore((state) => state.isOnline)
+  const checkUserConnection = useOnlineStatusStore((state) => state.checkUserConnection)
 
+
+
+  useEffect(() => {
+    const handleOnlineStatus = () => useOnlineStatusStore.setState((state) => ({ ...state, isOnline: navigator.onLine }));
+    const unsubFromAuth = authListener()
+    addWindowEventListener('online', handleOnlineStatus)
+    addWindowEventListener('offline', handleOnlineStatus)
+    const unsubFromUserConnection = checkUserConnection()
+
+    return () => {
+      removeWindowEventListener('online', handleOnlineStatus);
+      removeWindowEventListener('offline', handleOnlineStatus);
+      unsubFromAuth()
+      unsubFromUserConnection()
+    };
+
+  }, [])
+
+  useEffect(() => {
+    const unsubOnline = useOnlineStatusStore.subscribe((state) => state.isOnline, onlineNotificatorMiddleware)
+    return () => unsubOnline()
+  }, [])
+
+
+  if (!isOnline) {
+    return <LoadingView message={"You are Offline, please connect again..."} />
+  }
+  if (isChecking) {
+    return <LoadingView message={"Just one moment..."} />
+  }
 
   return (
     <Router>
-      <Navbar />
       <div className='content-wrapper'>
         <Routes>
-          <Route path="/settings" element={<SettingsView />} />
-          <Route path="/login" element={<LoginView />} />
-          <Route path="/register" element={<RegisterView />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<WelcomeView />} />
+          <Route element={<VerifyUser />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/chat/create" element={<ChatCreate />} />
+            <Route path="/chat/:id" element={<ChatView />} />
+            <Route path="/settings" element={<SettingsView />} />
+          </Route>
+
+
         </Routes>
       </div>
     </Router>

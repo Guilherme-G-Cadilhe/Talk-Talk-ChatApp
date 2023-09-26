@@ -1,4 +1,5 @@
 import React from "react";
+import { withBaseLayout } from "../../layouts/Base.component";
 
 
 const SettingsView = () => {
@@ -8,7 +9,6 @@ const SettingsView = () => {
       <div className="centered-container">
         <form className="centered-container-form">
           <div className="header">Adjust application settings</div>
-          <button type="button" >Notify Me</button>
           {/* <button type="button" onClick={notify}>Notify Me</button> */}
           <div className="form-container">
             <div className="my-3">
@@ -47,4 +47,4 @@ const SettingsView = () => {
   )
 }
 
-export default SettingsView;
+export default withBaseLayout(SettingsView, { canGoBack: true });
