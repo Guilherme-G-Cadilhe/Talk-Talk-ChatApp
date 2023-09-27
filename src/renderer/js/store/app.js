@@ -19,9 +19,7 @@ export const useOnlineStatusStore = create(
     isOnline: navigator.onLine,
     addWindowEventListener: (eventName, handler) => window.addEventListener(eventName, handler),
     removeWindowEventListener: (eventName, handler) => window.removeEventListener(eventName, handler),
-    checkUserConnection: () => apiConnection.onConnectionChanged((isConnected) => {
-      console.log('isConnected :>> ', isConnected);
-    })
+    checkUserConnection: (uid) => apiConnection.onConnectionChanged((isConnected) => apiConnection.setUserOnlineStatus(uid, isConnected))
   })),
 )
 

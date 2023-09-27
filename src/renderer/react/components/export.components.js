@@ -9,4 +9,5 @@ export { default as MessagesListChat } from './Chats/Messages-List/Messages-List
 export { default as LoginForm } from './User/Login/Login-Form.component.jsx'
 export { default as RegisterForm } from './User/Register/Register-Form.component.jsx'
 export { default as LoadingView } from './Loader/Loading-View/Loading-View.component.jsx'
+export { default as MessageInput } from './Chats/Message-Input/Message-Input.component.jsx'
 // export { default as LoadingSpinner } from './Loader/Loading-Spinner/Loading-Spinner.component.jsx'

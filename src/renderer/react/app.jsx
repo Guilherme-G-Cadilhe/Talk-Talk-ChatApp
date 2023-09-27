@@ -23,6 +23,7 @@ const VerifyUser = () => {
 };
 
 const App = () => {
+  const user = useAuthStore((state) => state.user);
   const authListener = useAuthStore((state) => state.AuthStateListener);
   const isChecking = useAuthStore((state) => state.isChecking)
   const addWindowEventListener = useOnlineStatusStore((state) => state.addWindowEventListener)
@@ -30,20 +31,16 @@ const App = () => {
   const isOnline = useOnlineStatusStore((state) => state.isOnline)
   const checkUserConnection = useOnlineStatusStore((state) => state.checkUserConnection)
 
-
-
   useEffect(() => {
     const handleOnlineStatus = () => useOnlineStatusStore.setState((state) => ({ ...state, isOnline: navigator.onLine }));
     const unsubFromAuth = authListener()
     addWindowEventListener('online', handleOnlineStatus)
     addWindowEventListener('offline', handleOnlineStatus)
-    const unsubFromUserConnection = checkUserConnection()
 
     return () => {
       removeWindowEventListener('online', handleOnlineStatus);
       removeWindowEventListener('offline', handleOnlineStatus);
       unsubFromAuth()
-      unsubFromUserConnection()
     };
 
   }, [])
@@ -52,6 +49,17 @@ const App = () => {
     const unsubOnline = useOnlineStatusStore.subscribe((state) => state.isOnline, onlineNotificatorMiddleware)
     return () => unsubOnline()
   }, [])
+
+  useEffect(() => {
+    let unsubFromUserConnection = null;
+    if (user?.uid) {
+      unsubFromUserConnection = checkUserConnection(user?.uid)
+    }
+    return () => {
+      unsubFromUserConnection && unsubFromUserConnection()
+    };
+
+  }, [user])
 
 
   if (!isOnline) {
