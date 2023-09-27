@@ -9,13 +9,27 @@ function ChatView() {
   const { id } = useParams();
   useChatsStore((state) => state.updateCount); //Necessary for the update User
   const usersWatcher = useRef({})
+
   const subscribeToChat = useChatsStore((state) => state.subscribeToChat);
   const subscribeToProfile = useChatsStore((state) => state.subscribeToProfile);
+  const subscribeToChatMessages = useChatsStore((state) => state.subscribeToChatMessages);
+  const registerMessageSubscription = useChatsStore((state) => state.registerMessageSubscription);
+
   const activeChat = useChatsStore((state) => state.activeChats[id]);
+  const sendChatMessage = useChatsStore((state) => state.sendChatMessage);
+  const messagesChats = useChatsStore((state) => state.messagesChats[id]);
+  const messageSubs = useChatsStore((state) => state.messageSubs[id]);
   const joinedUsers = activeChat?.joinedUsers
 
   useEffect(() => {
     const unsubFromChat = subscribeToChat(id)
+
+
+    if (!messageSubs) {
+      const unsubFromMessages = subscribeToChatMessages(id)
+      registerMessageSubscription(id, unsubFromMessages)
+    }
+
     return () => {
       unsubFromChat()
       unsubFromJoinedUsers()
@@ -36,6 +50,11 @@ function ChatView() {
     Object.keys(usersWatcher.current).forEach(id => usersWatcher.current[id]())
   }, [usersWatcher.current])
 
+  const sendMessage = useCallback((message) => {
+    console.log('message :>> ', message);
+    sendChatMessage(message, id)
+  }, [id])
+
   if (!activeChat?.id) return <LoadingView message='Loading Chat...' />
 
   return (
@@ -45,8 +64,8 @@ function ChatView() {
       </div>
       <div className="col-9 fh">
         <TitleChat title={`Channel: ${activeChat?.name || ''}`} />
-        <MessagesListChat />
-        <MessageInput />
+        <MessagesListChat messages={messagesChats} />
+        <MessageInput onSubmit={sendMessage} />
       </div>
     </div>
 

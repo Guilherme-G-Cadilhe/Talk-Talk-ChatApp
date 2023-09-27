@@ -10,6 +10,8 @@ export const useChatsStore = create(
     available: [],
     activeChats: {},
     updateCount: 1,
+    messagesChats: {},
+    messageSubs: {},
 
     fetchChats: async () => {
       const chats = await apiChat.fetchChats()
@@ -32,7 +34,7 @@ export const useChatsStore = create(
       await apiChat.joinChat(user.uid, chatId)
       return chatId
     },
-    restartChats: () => set((state) => ({ ...state, joined: [], available: [], activeChats: {} })),
+    restartChats: () => set((state) => ({ ...state, joined: [], available: [], activeChats: {}, updateCount: 1, messagesChats: {}, messageSubs: {} })),
     joinChat: async (chat) => {
       const { user } = useAuthStore.getState()
       const done = await apiChat.joinChat(user.uid, chat.id)
@@ -61,8 +63,8 @@ export const useChatsStore = create(
         const joinedUsers = state.activeChats[chatId]?.joinedUsers
         if (!joinedUsers) return state
         const index = joinedUsers.findIndex(ju => ju.uid === user.uid);
-        if (index < 0) { return state; }
-        if (joinedUsers[index].state === user.state) { return state; }
+        if (index < 0) return state;
+        if (joinedUsers[index].state === user.state) return state;
 
         joinedUsers[index].state = user.state;
         activeChat[chatId].joinedUsers = joinedUsers
@@ -74,6 +76,56 @@ export const useChatsStore = create(
         }
       })
     }),
+    sendChatMessage: (message, chatId) => {
+      const newMessage = { ...message }
+      const { user } = useAuthStore.getState()
+      const userRef = db.doc(`profiles/${user.uid}`)
+      newMessage.author = userRef
+      return apiChat
+        .sendChatMessage(newMessage, chatId)
+    },
+    subscribeToChatMessages: (chatId) => apiChat.subscribeToChatMessages(chatId, async (messages) => {
+      messages = messages.map(message => {
+        if (message.type === 'added') return { id: message.doc.id, ...message.doc.data() }
+
+      })
+      const messagesWithAuthor = [];
+      const cache = {};
+      for await (let message of messages) {
+        if (cache[message.author.id]) {
+          message.author = cache[message.author.id]
+        } else {
+          const userSnapshot = await message.author.get();
+          cache[userSnapshot.id] = userSnapshot.data();
+          message.author = userSnapshot.data()
+        }
+
+        messagesWithAuthor.push(message)
+      }
+      set((state) => {
+        const messageChats = state.messagesChats;
+        const prevMessages = messageChats[chatId] || []
+        messageChats[chatId] = [...prevMessages, ...messagesWithAuthor]
+        console.log('messageChats INTERNO :>> ', messageChats);
+
+        return {
+          ...state,
+          messagesChats: messageChats,
+          updateCount: state.updateCount + 1
+        }
+      })
+    }),
+    registerMessageSubscription: (chatId, messageSub) => {
+      set((state) => {
+        const subsList = state.messageSubs;
+        subsList[chatId] = messageSub
+        return {
+          ...state,
+          messageSubs: subsList,
+        }
+      })
+    }
+
 
   }))
 export const useAuthStore = create((set, get) => ({
