@@ -1,8 +1,13 @@
 import React from "react";
 import { withBaseLayout } from "../../layouts/Base.component";
+import { useSettingsStore } from "../../../js/store/settings";
 
 
 const SettingsView = () => {
+  const updateSettings = useSettingsStore((state) => state.updateSettings)
+  const { isDarkTheme, showNotifications, playSound } = useSettingsStore((state) => state);
+
+  const handleChange = ({ target: { name, checked } }) => updateSettings(name, checked);
 
   return (
     <div className="centered-view">
@@ -14,6 +19,8 @@ const SettingsView = () => {
             <div className="my-3">
               <div className="form-check">
                 <input
+                  onChange={handleChange}
+                  checked={isDarkTheme}
                   name="isDarkTheme"
                   type="checkbox"
                   className="form-check-input" />
@@ -21,6 +28,8 @@ const SettingsView = () => {
               </div>
               <div className="form-check">
                 <input
+                  onChange={handleChange}
+                  checked={showNotifications}
                   name="showNotifications"
                   type="checkbox"
                   className="form-check-input" />
@@ -28,6 +37,8 @@ const SettingsView = () => {
               </div>
               <div className="form-check">
                 <input
+                  onChange={handleChange}
+                  checked={playSound}
                   name="playSound"
                   type="checkbox"
                   className="form-check-input" />

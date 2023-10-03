@@ -34,7 +34,15 @@ export const useChatsStore = create(
       await apiChat.joinChat(user.uid, chatId)
       return chatId
     },
-    restartChats: () => set((state) => ({ ...state, joined: [], available: [], activeChats: {}, updateCount: 1, messagesChats: {}, messageSubs: {} })),
+    restartChats: () => {
+      const messageSubs = get().messageSubs;
+      if (messageSubs) {
+        Object.keys(messageSubs).forEach(key => {
+          messageSubs[key]();
+        });
+      }
+      set((state) => ({ ...state, joined: [], available: [], activeChats: {}, updateCount: 1, messagesChats: {}, messageSubs: {} }))
+    },
     joinChat: async (chat) => {
       const { user } = useAuthStore.getState()
       const done = await apiChat.joinChat(user.uid, chat.id)
@@ -89,6 +97,7 @@ export const useChatsStore = create(
         if (message.type === 'added') return { id: message.doc.id, ...message.doc.data() }
 
       })
+      console.log("Entrou no subscribeToChatMessages");
       const messagesWithAuthor = [];
       const cache = {};
       for await (let message of messages) {
@@ -106,8 +115,6 @@ export const useChatsStore = create(
         const messageChats = state.messagesChats;
         const prevMessages = messageChats[chatId] || []
         messageChats[chatId] = [...prevMessages, ...messagesWithAuthor]
-        console.log('messageChats INTERNO :>> ', messageChats);
-
         return {
           ...state,
           messagesChats: messageChats,

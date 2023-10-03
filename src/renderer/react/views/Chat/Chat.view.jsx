@@ -9,6 +9,7 @@ function ChatView() {
   const { id } = useParams();
   useChatsStore((state) => state.updateCount); //Necessary for the update User
   const usersWatcher = useRef({})
+  const messageList = useRef()
 
   const subscribeToChat = useChatsStore((state) => state.subscribeToChat);
   const subscribeToProfile = useChatsStore((state) => state.subscribeToProfile);
@@ -51,8 +52,9 @@ function ChatView() {
   }, [usersWatcher.current])
 
   const sendMessage = useCallback((message) => {
-    console.log('message :>> ', message);
     sendChatMessage(message, id)
+      // scroll to bottom
+      .then(() => messageList.current.scrollIntoView(false, { behavior: 'smooth' }));
   }, [id])
 
   if (!activeChat?.id) return <LoadingView message='Loading Chat...' />
@@ -64,7 +66,9 @@ function ChatView() {
       </div>
       <div className="col-9 fh">
         <TitleChat title={`Channel: ${activeChat?.name || ''}`} />
-        <MessagesListChat messages={messagesChats} />
+        <MessagesListChat
+          innerRef={messageList}
+          messages={messagesChats} />
         <MessageInput onSubmit={sendMessage} />
       </div>
     </div>

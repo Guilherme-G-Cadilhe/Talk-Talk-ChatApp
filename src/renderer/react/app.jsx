@@ -11,6 +11,7 @@ import { Home, WelcomeView, SettingsView, ChatView, ChatCreate } from './views/e
 import { LoadingView, Navbar } from './components/export.components';
 import { useAuthStore } from '../js/store';
 import { onlineNotificatorMiddleware, useOnlineStatusStore } from '../js/store/app';
+import { useSettingsStore } from '../js/store/settings';
 
 const VerifyUser = () => {
   const location = useLocation();
@@ -23,6 +24,7 @@ const VerifyUser = () => {
 };
 
 const App = () => {
+  const loadInitialSettings = useSettingsStore((state) => state.loadInitialSettings);
   const user = useAuthStore((state) => state.user);
   const authListener = useAuthStore((state) => state.AuthStateListener);
   const isChecking = useAuthStore((state) => state.isChecking)
@@ -32,6 +34,7 @@ const App = () => {
   const checkUserConnection = useOnlineStatusStore((state) => state.checkUserConnection)
 
   useEffect(() => {
+    loadInitialSettings()
     const handleOnlineStatus = () => useOnlineStatusStore.setState((state) => ({ ...state, isOnline: navigator.onLine }));
     const unsubFromAuth = authListener()
     addWindowEventListener('online', handleOnlineStatus)
