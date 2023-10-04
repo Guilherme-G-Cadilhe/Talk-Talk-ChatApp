@@ -47,7 +47,7 @@ const SettingsView = () => {
             </div>
             <button
               type="button"
-              onClick={() => { }}
+              onClick={() => e_api.quitApp()}
               className="btn btn-danger">
               Quit App
             </button>

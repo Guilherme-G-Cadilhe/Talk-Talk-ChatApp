@@ -23,6 +23,11 @@ const VerifyUser = () => {
   );
 };
 
+const ContentWrapper = ({ children }) => {
+  const isDarkTheme = useSettingsStore((state) => state.isDarkTheme);
+  return (<div className={`content-wrapper ${isDarkTheme ? 'dark' : 'light'} `}>{children}</div>)
+}
+
 const App = () => {
   const loadInitialSettings = useSettingsStore((state) => state.loadInitialSettings);
   const user = useAuthStore((state) => state.user);
@@ -32,6 +37,8 @@ const App = () => {
   const removeWindowEventListener = useOnlineStatusStore((state) => state.removeWindowEventListener)
   const isOnline = useOnlineStatusStore((state) => state.isOnline)
   const checkUserConnection = useOnlineStatusStore((state) => state.checkUserConnection)
+
+  const { showNotifications } = useSettingsStore((state) => state.showNotifications);
 
   useEffect(() => {
     loadInitialSettings()
@@ -74,7 +81,7 @@ const App = () => {
 
   return (
     <Router>
-      <div className='content-wrapper'>
+      <ContentWrapper>
         <Routes>
           <Route path="/" element={<WelcomeView />} />
           <Route element={<VerifyUser />}>
@@ -86,7 +93,7 @@ const App = () => {
 
 
         </Routes>
-      </div>
+      </ContentWrapper>
     </Router>
   )
 }

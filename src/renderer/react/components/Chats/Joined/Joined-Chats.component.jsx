@@ -18,8 +18,8 @@ const JoinedChatsList = ({ chats }) => {
               <img src={image} alt="Retail Admin" />
               <span className="status online"></span>
             </div>
-            <p className="name-time" style={{ marginBottom: '0px' }}>
-              <span className="name mr-2" style={{ color: 'black' }}>{name}</span>
+            <p className="name-time" >
+              <span className="name mr-2" >{name}</span>
             </p>
           </li>)
         }) || null}

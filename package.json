@@ -6,7 +6,13 @@
   "scripts": {
     "start": "electron .",
     "watch": "webpack --config ./webpack/webpack.common.js --watch",
-    "dev": "npx electronmon ."
+    "build": "webpack --config ./webpack/webpack.prod.js",
+    "dev": "npx electronmon .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "make:linux": "electron-builder --linux",
+    "make:macos": "electron-builder --mac",
+    "make:win": "electron-builder --win --x64"
   },
   "repository": {
     "type": "git",
@@ -20,6 +26,52 @@
   ],
   "author": "Guilherme G Cadilhe ( Bobnini )",
   "license": "MIT",
+  "build": {
+    "productName": "Talk Talk App",
+    "appId": "com.bobnini.chatapp",
+    "files": [
+      "build/**/*",
+      "assets/**/*",
+      "utils/**/*",
+      "src/main/**/*",
+      "src/renderer/css/**/*",
+      "src/renderer/html/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "icon": "assets/images/talktalkalternative.png",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 430,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "icon": "assets/images/talktalkalternative.png",
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "AppImage"
+      ],
+      "category": "Development"
+    }
+  },
   "bugs": {
     "url": "https://github.com/Guilherme-G-Cadilhe/Talk-Talk-ChatApp/issues"
   },
@@ -27,7 +79,9 @@
   "devDependencies": {
     "@babel/core": "^7.22.9",
     "dotenv-webpack": "^8.0.1",
-    "electron": "^25.3.1"
+    "electron": "^25.3.1",
+    "electron-builder": "^24.6.4",
+    "webpack-merge": "^5.9.0"
   },
   "dependencies": {
     "@babel/preset-env": "^7.22.9",

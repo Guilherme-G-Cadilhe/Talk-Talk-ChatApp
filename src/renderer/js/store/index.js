@@ -97,7 +97,6 @@ export const useChatsStore = create(
         if (message.type === 'added') return { id: message.doc.id, ...message.doc.data() }
 
       })
-      console.log("Entrou no subscribeToChatMessages");
       const messagesWithAuthor = [];
       const cache = {};
       for await (let message of messages) {

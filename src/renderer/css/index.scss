@@ -28,6 +28,10 @@ $brand-facebook: #3b5998 !default;
 html,
 body {
   height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
@@ -35,7 +39,8 @@ body {
 }
 
 .content-wrapper {
-  height: 100%;
+  height: 100vh;
+  overflow: auto;
   background-color: $gray-200;
   padding-top: 70px;
   transition: background-color 1s;
@@ -43,6 +48,21 @@ body {
   &.dark {
     background-color: $gray-900;
     color: white;
+
+    .centered-view .centered-container-form .subheader {
+      color: white !important;
+    }
+
+    .centered-view .centered-container-form label {
+      color: white !important;
+    }
+    .text-muted {
+      color: $gray-500 !important;
+    }
+
+    .card-body {
+      color: black;
+    }
 
     .chat-container li .chat-text-wrapper {
       background: #4d4d4d;
@@ -59,6 +79,11 @@ body {
       .item {
         border-bottom: 1px solid $gray-700;
       }
+    }
+
+    .items .item.active-item,
+    .item:hover {
+      background-color: $gray-700;
     }
   }
 }
@@ -154,18 +179,6 @@ body {
 .items .item.active-item,
 .item:hover {
   background-color: #ffffff;
-  /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f9fb), to(#ffffff));
-  /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(right, #f7f9fb, #ffffff);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(right, #f7f9fb, #ffffff);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(right, #f7f9fb, #ffffff);
-  /* IE10 */
-  background-image: -o-linear-gradient(right, #f7f9fb, #ffffff);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(right, #f7f9fb, #ffffff);
 }
 
 .items .person:last-child {
@@ -490,7 +503,7 @@ ul {
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: $gray-700;
   z-index: 990;
 
   .loading-view {
@@ -520,5 +533,19 @@ ul {
         max-width: 480px;
       }
     }
+  }
+}
+
+.dark {
+  .loading-screen {
+    color: white;
+  }
+
+  .loading-view-container {
+    background-color: $gray-900;
+  }
+
+  .sk-chase-dot:before {
+    background-color: white;
   }
 }
